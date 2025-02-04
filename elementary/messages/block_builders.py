@@ -87,6 +87,24 @@ def SummaryLineBlock(
     return LineBlock(inlines=text_blocks)
 
 
+def NonPrimaryFactBlock(fact: Tuple[SimpleLineBlock, SimpleLineBlock]) -> FactBlock:
+    title, value = fact
+    return FactBlock(
+        title=LineBlock(inlines=_build_inlines(title)),
+        value=LineBlock(inlines=_build_inlines(value)),
+        primary=False,
+    )
+
+
+def PrimaryFactBlock(fact: Tuple[SimpleLineBlock, SimpleLineBlock]) -> FactBlock:
+    title, value = fact
+    return FactBlock(
+        title=LineBlock(inlines=_build_inlines(title)),
+        value=LineBlock(inlines=_build_inlines(value)),
+        primary=True,
+    )
+
+
 def FactsBlock(
     *,
     facts: Sequence[

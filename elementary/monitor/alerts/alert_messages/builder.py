@@ -7,12 +7,15 @@ from elementary.messages.block_builders import (
     FactsBlock,
     JsonCodeBlock,
     LinkLineBlock,
+    NonPrimaryFactBlock,
+    PrimaryFactBlock,
     SummaryLineBlock,
 )
 from elementary.messages.blocks import (
     CodeBlock,
     DividerBlock,
     ExpandableBlock,
+    FactListBlock,
     HeaderBlock,
     Icon,
     InlineBlock,
@@ -222,23 +225,34 @@ class AlertMessageBuilder:
                 ]
             )
         )
-        facts = []
+        fact_blocks = []
         if table:
-            facts.append(("Table", table))
+            fact_blocks.append(PrimaryFactBlock(("Table", table)))
         if column:
-            facts.append(("Column", column))
+            fact_blocks.append(PrimaryFactBlock(("Column", column)))
 
-        facts.append(("Tags", ", ".join(tags) if tags else "No tags"))
-        facts.append(("Owners", ", ".join(owners) if owners else "No owners"))
-        facts.append(
-            ("Subscribers", ", ".join(subscribers) if subscribers else "No subscribers")
+        fact_blocks.append(
+            NonPrimaryFactBlock(("Tags", ", ".join(tags) if tags else "No tags"))
+        )
+        fact_blocks.append(
+            NonPrimaryFactBlock(
+                ("Owners", ", ".join(owners) if owners else "No owners")
+            )
+        )
+        fact_blocks.append(
+            NonPrimaryFactBlock(
+                (
+                    "Subscribers",
+                    ", ".join(subscribers) if subscribers else "No subscribers",
+                )
+            )
         )
 
         if description:
-            facts.append(("Description", description))
+            fact_blocks.append(NonPrimaryFactBlock(("Description", description)))
         if path:
-            facts.append(("Path", path))
-        blocks.append(FactsBlock(facts=facts))
+            fact_blocks.append(NonPrimaryFactBlock(("Path", path)))
+        blocks.append(FactListBlock(facts=fact_blocks))
         return blocks
 
     def _get_result_blocks(
